@@ -1,0 +1,12 @@
+{% extends 'news_portal/base.html' %}
+{% load news_tags %}
+
+{% block content %}
+<h1> {{ post.title}}</h1>
+
+{% if post.photo %}
+<p><img class="img-article-left" src="{{ post.photo.url }}"></p>
+{% endif %}
+<!--# фильтр linebreaks отображает тэги абзацев в наших статьях-->
+{{ post.content|censor|linebreaks}}
+{% endblock %}

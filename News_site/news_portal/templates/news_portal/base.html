@@ -1,0 +1,82 @@
+<!--# подключаем статические внешние файлы к нашему шаблону-->
+{% load static %}
+<!--# подключаем файл news_tags.py который содержит наш тэг-->
+{% load news_tags %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{title}}</title>
+	<!--    # подключение файла оформления. Используем тег static который подключили в начале этого шаблона и указываем путь к файлу оформления т.е. к styles.css-->
+	<link type="text/css" href="{% static 'news_portal/css/styles.css' %}" rel="stylesheet" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="{% static 'news_portal/images/main.ico' %}" type="image/x-icon"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<table class="table-page" border=0 cellpadding="0" cellspacing="0">
+<tr><td valign=top>
+{% block mainmenu %}
+		<div class="header">
+			<ul id="mainmenu" class="mainmenu">
+			<li class="logo"><a href="{% url 'home' %}"><div class="logo"></div></a></li>
+<!--# проходим по списку словарей из файла views.py-->
+{% for m in menu %}
+	{% if not forloop.last %}
+			<li><a href="{% url m.url_name %}">{{m.title}}</a></li>
+	{% else %}
+			<li class="last"><a href="{% url m.url_name %}">{{m.title}}</a></li>
+	{% endif %}
+{% endfor %}
+			</ul>
+			<div class="clear"></div>
+		</div>
+{% endblock mainmenu %}
+
+
+<table class="table-content" border=0 cellpadding="0" cellspacing="0">
+<tr>
+<!-- Sidebar слева -->
+	<td valign="top" class="left-chapters">
+<!--		{% getcats filter=3 %}-->
+<!--		# вызов функции getcats нашего тэга-->
+<!--		# чтобы содержимое тэга getcats перенести в переменную применяют ключевое слово 'as' с помощью которого переменная categories будет ссылаться на данные нашего тэга getcats-->
+<!--		{% getcats as categories %}-->
+	<ul id="leftchapters">
+{% if cat_selected == 0 %}
+		<li class="selected">Все категории</li>
+{% else %}
+		<li><a href="{% url 'home' %}">Все категории</a></li>
+{% endif %}
+<!--# включающий тэг из файла news_tags.py-->
+<!--# вызывается тэг show_categories, сортировка идёт по имени(её можно не указывать) и cat_selected обозначает выбранную категорию-->
+{% show_categories 'name' cat_seleсted %}
+
+<!--{% for c in categories %}-->
+<!--	{% if c.pk == cat_selected %}-->
+<!--		<li class="selected">{{ c.name }}</li>-->
+<!--	{% else %}-->
+<!--		<li><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>-->
+<!--	{% endif %}-->
+<!--{% endfor %}-->
+<!--		<li><a href="#">Наука</a></li>-->
+<!--		<li><a href="#">Политика</a></li>-->
+<!--		<li><a href="#">Спорт</a></li>-->
+<!--		<li class="share">-->
+<!--		<p>Наш канал</p>-->
+<!--		<a class="share-yt" href="https://www.youtube.com/channel/UClJzWfGWuGJL2t-3dYKcHTA/playlists" target="_blank" rel="nofollow"></a>-->
+<!--		</li>-->
+	</ul>
+</td>
+<!-- Конец Sidebar'а -->
+<td valign="top" class="content">
+	{% block breadcrumbs %}
+	{% endblock %}
+
+<!-- Блок контента -->
+	<div class="content-text">
+{% block content %}
+{% endblock %}
+	</div>
+</body>
+</html>
